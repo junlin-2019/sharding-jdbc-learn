@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.dao.TOrderDao">
+
+    <resultMap type="com.example.entity.TOrder" id="TOrderMap">
+        <result property="orderId" column="order_id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+        <result property="addr" column="addr" jdbcType="VARCHAR"/>
+        <result property="orderYear" column="order_year" jdbcType="VARCHAR"/>
+        <result property="goodsName" column="goods_name" jdbcType="VARCHAR"/>
+        <result property="goddsNum" column="godds_num" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TOrderMap">
+        select
+          order_id, user_id, addr, order_year, goods_name, godds_num
+        from t_order
+        where order_id = #{orderId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TOrderMap">
+        select
+          order_id, user_id, addr, order_year, goods_name, godds_num
+        from t_order
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TOrderMap">
+        select
+        order_id, user_id, addr, order_year, goods_name, godds_num
+        from t_order
+        <where>
+            <if test="orderId != null">
+                and order_id = #{orderId}
+            </if>
+            <if test="userId != null and userId != ''">
+                and user_id = #{userId}
+            </if>
+            <if test="addr != null and addr != ''">
+                and addr = #{addr}
+            </if>
+            <if test="orderYear != null and orderYear != ''">
+                and order_year = #{orderYear}
+            </if>
+            <if test="goodsName != null and goodsName != ''">
+                and goods_name = #{goodsName}
+            </if>
+            <if test="goddsNum != null">
+                and godds_num = #{goddsNum}
+            </if>
+        </where>
+    </select>
+    <select id="selectByCondition" resultMap="TOrderMap">
+        select
+          order_id, user_id, addr, order_year, goods_name, godds_num
+        from t_order
+        where addr = #{order.addr}
+        <if test="order.orderYear!=null and order.orderYear!=''">
+           and  order_year = #{order.orderYear}
+        </if>
+        <if test="order.userId!=null and order.userId!=''">
+            and user_id = #{order.userId}
+        </if>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="orderId" useGeneratedKeys="true">
+        insert into t_order(user_id, addr, order_year, goods_name, godds_num)
+        values (#{userId}, #{addr}, #{orderYear}, #{goodsName}, #{goddsNum})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="orderId" useGeneratedKeys="true">
+        insert into t_order(user_id, addr, order_year, goods_name, godds_num)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.userId}, #{entity.addr}, #{entity.orderYear}, #{entity.goodsName}, #{entity.goddsNum})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="orderId" useGeneratedKeys="true">
+        insert into t_order(user_id, addr, order_year, goods_name, godds_num)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.userId}, #{entity.addr}, #{entity.orderYear}, #{entity.goodsName}, #{entity.goddsNum})
+        </foreach>
+        on duplicate key update
+        user_id = values(user_id) , addr = values(addr) , order_year = values(order_year) , goods_name =
+        values(goods_name) , godds_num = values(godds_num)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update t_order
+        <set>
+            <if test="userId != null and userId != ''">
+                user_id = #{userId},
+            </if>
+            <if test="addr != null and addr != ''">
+                addr = #{addr},
+            </if>
+            <if test="orderYear != null and orderYear != ''">
+                order_year = #{orderYear},
+            </if>
+            <if test="goodsName != null and goodsName != ''">
+                goods_name = #{goodsName},
+            </if>
+            <if test="goddsNum != null">
+                godds_num = #{goddsNum},
+            </if>
+        </set>
+        where order_id = #{orderId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from t_order where order_id = #{orderId}
+    </delete>
+
+</mapper>
