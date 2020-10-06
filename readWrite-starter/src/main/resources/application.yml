@@ -1,0 +1,32 @@
+server:
+  port: 8085
+
+sharding:
+  jdbc:
+    datasource:
+      names: ds0,ds1
+      ds0:
+        type: com.zaxxer.hikari.HikariDataSource
+        jdbcUrl: jdbc:mysql://localhost:3339/sharding01?useSSL=false&useUnicode=yes&characterEncoding=utf8
+        username: root
+        password: 123456
+        driverClassName: com.mysql.cj.jdbc.Driver
+      ds1:
+        type: com.zaxxer.hikari.HikariDataSource
+        jdbcUrl: jdbc:mysql://localhost:3340/sharding01?useSSL=false&useUnicode=yes&characterEncoding=utf8
+        username: root
+        password: 123456
+        driverClassName: com.mysql.cj.jdbc.Driver
+    config:
+      sharding:
+        default-data-source-name: ds0
+      masterslave:
+        name: ms
+        master-data-source-name: ds0
+        slave-data-source-names: ds1
+      props:
+        sql.show: true
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.example.entity
+
