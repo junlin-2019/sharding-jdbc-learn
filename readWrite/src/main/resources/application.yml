@@ -1,0 +1,18 @@
+server:
+  port: 8084
+spring:
+  datasource:
+    minIdle: 10
+    maxActive: 50
+    maxLifetime: 180000
+    idleTimeout: 60000
+  datasource0:
+    url: jdbc:mysql://localhost:3339/sharding01?useSSL=false&useUnicode=yes&characterEncoding=utf8
+    username: root
+    password: 123456
+    driverClassName: com.mysql.jdbc.Driver
+  datasource1:
+    url: jdbc:mysql://localhost:3340/sharding01?useSSL=false&useUnicode=yes&characterEncoding=utf8
+    username: root
+    password: 123456
+    driverClassName: com.mysql.jdbc.Driver
