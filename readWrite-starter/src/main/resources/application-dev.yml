@@ -1,0 +1,66 @@
+server:
+  port: 8085
+
+
+spring:
+  shardingsphere:
+    datasource:
+      names: db0_master,db0_slave,db1_master,db1_slave
+      db0_master:
+        type: com.zaxxer.hikari.HikariDataSource
+        jdbcUrl: jdbc:mysql://localhost:3339/sharding01?useSSL=false&useUnicode=yes&characterEncoding=utf8
+        username: root
+        password: 123456
+        driverClassName: com.mysql.cj.jdbc.Driver
+      db0_slave:
+        type: com.zaxxer.hikari.HikariDataSource
+        jdbcUrl: jdbc:mysql://localhost:3341/sharding01?useSSL=false&useUnicode=yes&characterEncoding=utf8
+        username: root
+        password: 123456
+        driverClassName: com.mysql.cj.jdbc.Driver
+      db1_master:
+        type: com.zaxxer.hikari.HikariDataSource
+        jdbcUrl: jdbc:mysql://localhost:3340/sharding01?useSSL=false&useUnicode=yes&characterEncoding=utf8
+        username: root
+        password: 123456
+        driverClassName: com.mysql.cj.jdbc.Driver
+      db1_slave:
+        type: com.zaxxer.hikari.HikariDataSource
+        jdbcUrl: jdbc:mysql://localhost:3342/sharding01?useSSL=false&useUnicode=yes&characterEncoding=utf8
+        username: root
+        password: 123456
+        driverClassName: com.mysql.cj.jdbc.Driver
+    sharding:
+      tables:
+        t_order:
+          actual-data-nodes: db0.t_order_2020_0,db0.t_order_2020_1,db0.t_order_2019_0,db0.t_order_2019_1,db1.t_order_2019_0,db1.t_order_2019_1,db1.t_order_2020_0,db1.t_order_2020_1
+          database-strategy:
+            standard:
+              shardingColumn: addr
+              preciseAlgorithmClassName: com.example.config.OrderDataSourcePreciseShardingAlgorithm
+          table-strategy:
+            complex:
+              shardingColumns: order_year,user_id
+              algorithmClassName: com.example.config.OrderTableComplexKeyAlgorithm
+          keyGenerator:
+            column: order_id
+      master-slave-rules:
+        db0:
+          master-data-source-name: db0_master
+          slave-data-source-names: db0_slave
+          loadBalanceAlgorithmType: ROUND_ROBIN
+        db1:
+          master-data-source-name: db1_master
+          slave-data-source-names: db1_slave
+          loadBalanceAlgorithmType: ROUND_ROBIN
+      props:
+        sql.show: true
+      default-key-generator:
+        type: SNOWFLAKE
+        props:
+          work.id: 100
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.example.entity
+

@@ -13,7 +13,6 @@
 
     <properties>
         <mybatis-spring-boot-starter.version>2.0.0</mybatis-spring-boot-starter.version>
-        <sharding-sphere.version>3.1.0</sharding-sphere.version>
         <spring.boot.version>2.1.2.RELEASE</spring.boot.version>
         <guava.version>20.0</guava.version>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -51,10 +50,10 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
-       <dependency>
-            <groupId>io.shardingsphere</groupId>
+        <dependency>
+            <groupId>org.apache.shardingsphere</groupId>
             <artifactId>sharding-jdbc-spring-boot-starter</artifactId>
-            <version>${sharding-sphere.version}</version>
+            <version>4.0.0-RC1</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
